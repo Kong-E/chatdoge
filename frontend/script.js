@@ -27,6 +27,7 @@ sendButton.addEventListener("click", async function () {
   userMessages.push(message);
   messageInput.value = "";
 
+  //post 하기
   try {
     const response = await fetch("http://localhost:3000/fortuneTell", {
       method: "POST", // 또는 'PUT'
