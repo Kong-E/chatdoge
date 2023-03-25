@@ -21,7 +21,10 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // POST method route
-app.get("/forturnTell", async function (req, res) {
+app.post("/fortuneTell", async function (req, res) {
+  let { userMessages, assistantMessages } = req.body;
+  console.log(userMessages);
+  console.log(assistantMessages);
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
@@ -43,9 +46,26 @@ app.get("/forturnTell", async function (req, res) {
       { role: "user", content: "오늘의 운세가 뭐야?" },
     ],
   });
+
+  while (userMessages.length != 0 && assistantMessages.length != 0) {
+    if (userMessages.length != 0) {
+      messages.push(
+        '{role: "user", content: "' +
+          String(userMessages.shift()).replace(/\n/g, "") +
+          '"}'
+      );
+    }
+    if (assistantMessages.length != 0) {
+      messages.push(
+        '{role: "assistant", content: "' +
+          String(assistantMessages.shift()).replace(/\n/g, "") +
+          '"}'
+      );
+    }
+  }
   let fortune = completion.data.choices[0].message["content"];
   console.log(fortune);
-  res.send(fortune);
+  res.json({ assistant: fortune }); //json 응답으로 받기
 });
 
 app.listen(3000);
