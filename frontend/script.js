@@ -1,9 +1,35 @@
+const introContainer = document.getElementById("intro_container");
 const chatContainer = document.getElementById("chat_container");
 const sendButton = document.getElementById("send_button");
 const messageInput = document.getElementById("message_input");
 
 let userMessages = [];
 let assistantMessages = [];
+let myDateTime = "";
+
+if (messageInput != "") {
+  sendButton.disabled = false;
+}
+function showSpinner() {
+  document.querySelector(".spinner").style.display = "block";
+}
+
+function hideSpinner() {
+  document.querySelector(".spinner").style.display = "none";
+}
+
+function start() {
+  const date = document.getElementById("date").value;
+  const hour = document.getElementById("hour").value;
+  if (date === "") {
+    alert("생년월일을 입력해주세요.");
+    return;
+  }
+  myDateTime = date + " " + hour;
+
+  introContainer.classList.toggle("hidden");
+  chatContainer.classList.toggle("hidden");
+}
 
 function appendMessage(messageText, sender) {
   const messageElem = document.createElement("div");
@@ -22,6 +48,7 @@ sendButton.addEventListener("click", async function () {
   if (message === "") return;
 
   appendMessage(message, "user");
+  showSpinner();
 
   // userMessages 메세지 추가
   userMessages.push(message);
@@ -35,12 +62,14 @@ sendButton.addEventListener("click", async function () {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        myDateTime: myDateTime,
         userMessages: userMessages,
         assistantMessages: assistantMessages,
       }), // replace with your desired data
     });
 
     const data = await response.json();
+    hideSpinner();
 
     appendMessage(data.assistant, "bot");
 

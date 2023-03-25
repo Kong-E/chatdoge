@@ -2,6 +2,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.hidden {
+  display: none;
+}
+
 #chat_container {
   height: 300px;
   overflow-y: scroll;
@@ -37,4 +41,20 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.spinner {
+  display: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  border-top-color: #1a1a1a;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
